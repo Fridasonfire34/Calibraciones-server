@@ -20,7 +20,7 @@ module.exports = (config) => {
 
             const result = await pool.request()
                 .input('ID', sql.VarChar(255), equipo)
-                .query('SELECT [ID] FROM [Vernier 6] WHERE [ID] = @ID');
+                .query('SELECT [ID] FROM [Vernier] WHERE [ID] = @ID');
 
             if (result.recordset.length > 0) {
                 await pool.request()
@@ -32,13 +32,12 @@ module.exports = (config) => {
                     .input('Dim4', sql.Float, parseFloat(dimensiones[3]))
                     .input('Dim5', sql.Float, parseFloat(dimensiones[4]))
                     .input('Dim6', sql.Float, parseFloat(dimensiones[5]))
-                    .input('Dim7', sql.Float, parseFloat(dimensiones[6]))
                     .input('Estatus', sql.VarChar(255), estatus)
                     .input('Comentarios', sql.VarChar(255), comentarios)
                     .input('Patron', sql.VarChar(255), patron)
                     .input('SiguienteCalibracion', sql.Date, siguienteCalibracion)
                     .query(`
-                        UPDATE [Vernier 6]
+                        UPDATE [Vernier]
                         SET
                             [Ultima Calibracion] = @UltimaCalibracion,
                             [Dim 1] = @Dim1,
@@ -47,7 +46,6 @@ module.exports = (config) => {
                             [Dim 4] = @Dim4,
                             [Dim 5] = @Dim5,
                             [Dim 6] = @Dim6,
-                            [Dim 7] = @Dim7,
                             [Estatus] = @Estatus,
                             [Comentarios] = @Comentarios,
                             [Patron de Verificacion] = @Patron,

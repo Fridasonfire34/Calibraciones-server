@@ -8,7 +8,7 @@ module.exports = (config) => {
         try {
             await sql.connect(config);
 
-            const result = await sql.query("SELECT ID FROM [Vernier 6] WHERE [Calibrado] IS NULL ");
+            const result = await sql.query("SELECT ID FROM [Vernier] WHERE [Calibrado] IS NULL ");
 
             res.json(result.recordset);
         } catch (err) {

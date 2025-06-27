@@ -7,52 +7,50 @@ module.exports = (config) => {
     router.get('/historicoFlex', async (req, res) => {
         try {
             const pool = await sql.connect(config);
+
             await pool.request().query(`
                 INSERT INTO Historico (
                     [ID Equipo], [Fecha], [DIM 1], [DIM 2], [DIM 3], [DIM 4], [DIM 5], [DIM 6], [DIM 7], [Comentarios], [Patron]
                 )
                 SELECT
-                    ID, [Ultima Calibracion], [Dim 1], [Dim 2], [Dim 3], [Dim 4], [Dim 5], [Dim 6], [Dim 7], Comentarios, [Patron de Verificacion]
+                    [ID], [Ultima Calibracion], [Dim 1], [Dim 2], [Dim 3], [Dim 4], [Dim 5], [Dim 6], [Dim 7], [Comentarios], [Patron de Verificacion]
                 FROM
                     Flexometros
                 WHERE
-                    [Calibrado] = 'OK';
-                
+                    [Calibrado] = 'OK'
+                    AND [Ultima Calibracion] <= DATEADD(MONTH, -3, GETDATE());
+            `);
+
+            await pool.request().query(`
                 UPDATE Flexometros
                 SET
-                [Ultima Calibracion] = NULL,
-                [Dim 1] = NULL,
-                [Dim 2] = NULL,
-                [Dim 3] = NULL,
-                [Dim 4] = NULL,
-                [Dim 5] = NULL,
-                [Dim 6] = NULL,
-                [Dim 7] = NULL,
-                Comentarios= NULL, [Patron de Verificacion] = NULL,
+                    [Ultima Calibracion] = NULL,
+                    [Dim 1] = NULL,
+                    [Dim 2] = NULL,
+                    [Dim 3] = NULL,
+                    [Dim 4] = NULL,
+                    [Dim 5] = NULL,
+                    [Dim 6] = NULL,
+                    [Dim 7] = NULL,
+                    [Comentarios] = NULL,
+                    [Patron de Verificacion] = NULL,
                     [Calibrado] = NULL,
                     [Estatus] = NULL,
                     [Siguiente Calibracion] = NULL
                 WHERE
-                    [Calibrado] = 'OK';
-            `);
-            await pool.request().query(`
-                SELECT * FROM Historico ORDER BY Fecha ASC;
-            
-                UPDATE E
-                SET
-                    E.[Ultima Calibracion Flex] = H.Fecha,
-                    E.[Siguiente Calibracion Flex] = DATEADD(DAY, 60, H.Fecha)
-                FROM
-                    Equipos E
-                INNER JOIN (
-                    SELECT [ID Equipo], MAX(Fecha) AS Fecha
-                    FROM Historico
-                    GROUP BY [ID Equipo]
-                ) H ON E.Flexometro = H.[ID Equipo];
+                    [Calibrado] = 'OK'
+                    AND [Ultima Calibracion] <= DATEADD(MONTH, -3, GETDATE());
             `);
 
+            const result = await pool.request().query(`
+                SELECT [ID] FROM Flexometros WHERE [Calibrado] IS NULL
+            `);
 
-            res.status(200).send('Datos procesados correctamente');
+            res.status(200).json({
+                mensaje: 'Datos procesados correctamente',
+                equiposFaltantes: result.recordset
+            });
+
         } catch (err) {
             console.error('Error al procesar los datos:', err);
             res.status(500).send('Error al procesar los datos');

@@ -29,10 +29,6 @@ module.exports = (config) => {
                     .input('Dim1', sql.Float, parseFloat(dimensiones[0]))
                     .input('Dim2', sql.Float, parseFloat(dimensiones[1]))
                     .input('Dim3', sql.Float, parseFloat(dimensiones[2]))
-                    .input('Dim4', sql.Float, parseFloat(dimensiones[3]))
-                    .input('Dim5', sql.Float, parseFloat(dimensiones[4]))
-                    .input('Dim6', sql.Float, parseFloat(dimensiones[5]))
-                    .input('Dim7', sql.Float, parseFloat(dimensiones[6]))
                     .input('Estatus', sql.VarChar(255), estatus)
                     .input('Comentarios', sql.VarChar(255), comentarios)
                     .input('Patron', sql.VarChar(255), patron)
@@ -44,10 +40,6 @@ module.exports = (config) => {
                             [Dim 1] = @Dim1,
                             [Dim 2] = @Dim2,
                             [Dim 3] = @Dim3,
-                            [Dim 4] = @Dim4,
-                            [Dim 5] = @Dim5,
-                            [Dim 6] = @Dim6,
-                            [Dim 7] = @Dim7,
                             [Estatus] = @Estatus,
                             [Comentarios] = @Comentarios,
                             [Patron de Verificacion] = @Patron,

@@ -8,12 +8,12 @@ module.exports = (config) => {
         try {
             await sql.connect(config);
 
-            const result = await sql.query("SELECT ID FROM [Flexometros] WHERE [Calibrado] IS NULL");
+            const result = await sql.query("SELECT ID FROM [Flexometros] WHERE [Calibrado] IS NULL ");
 
             res.json(result.recordset);
         } catch (err) {
-            console.error('Error al obtener los datos de la tabla Flexometros:', err);
-            res.status(500).send('Error al obtener los datos de la tabla Flexometros');
+            console.error('Error al obtener los datos de la tabla Vernier 6:', err);
+            res.status(500).send('Error al obtener los datos de la tabla Vernier 6');
         }
     });
 
