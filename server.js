@@ -14,7 +14,13 @@ const vernierRoutes = require('./vernier');
 const vernier12Routes = require('./vernier12');
 const calibracionFlexRoutes = require('./calibracionFlex');
 const calibracionVerRoutes = require('./calibracionVer');
+const calibracionVer12Routes = require('./calibracionVer12');
 const calibracionTransRoutes = require('./calibracionTrans');
+const calibracionBasculaRoutes = require('./calibracionBascula');
+const calibracionMicroRoutes = require('./calibracionMicro');
+const historicoOtrosRoutes = require('./historicoOtros');
+const OtrosRoutes = require('./Otros');
+const calibracionEspesorRoutes = require('./calibracionEspesor');
 
 
 const cors = require('cors');
@@ -63,7 +69,13 @@ app.use('/api', historicoVer12Routes(config));
 app.use('/api', historicoTransportadorRoutes(config));
 app.use('/api', calibracionFlexRoutes(config));
 app.use('/api', calibracionVerRoutes(config));
+app.use('/api', calibracionVer12Routes(config));
 app.use('/api', calibracionTransRoutes(config));
+app.use('/api', historicoOtrosRoutes(config));
+app.use('/api', calibracionBasculaRoutes(config));
+app.use('/api', calibracionMicroRoutes(config));
+app.use('/api', OtrosRoutes(config));
+app.use('/api', calibracionEspesorRoutes(config));
 
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);

@@ -8,6 +8,21 @@ module.exports = (config) => {
         try {
             const pool = await sql.connect(config);
 
+<<<<<<< HEAD
+=======
+            const result = await pool.request().query(`
+                SELECT COUNT(*) AS total 
+                FROM Flexometros 
+                WHERE [Calibrado] = 'OK' AND [Siguiente Calibracion] >= GETDATE();
+            `);
+
+            const totalOK = result.recordset[0].total;
+
+            if (totalOK === 0) {
+                return res.status(200).send('No hay equipos calibrados válidos para procesar.');
+            }
+
+>>>>>>> 82b6ea8 (ultimos cambios para deploy)
             await pool.request().query(`
                 INSERT INTO Historico (
                     [ID Equipo], [Fecha], [DIM 1], [DIM 2], [DIM 3], [DIM 4], [DIM 5], [DIM 6], [DIM 7], [Comentarios], [Patron]
@@ -17,11 +32,16 @@ module.exports = (config) => {
                 FROM
                     Flexometros
                 WHERE
+<<<<<<< HEAD
                     [Calibrado] = 'OK'
                     AND [Ultima Calibracion] <= DATEADD(MONTH, -3, GETDATE());
             `);
 
             await pool.request().query(`
+=======
+                    [Calibrado] = 'OK' AND [Siguiente Calibracion] >= GETDATE();
+                
+>>>>>>> 82b6ea8 (ultimos cambios para deploy)
                 UPDATE Flexometros
                 SET
                     [Ultima Calibracion] = NULL,
@@ -32,12 +52,17 @@ module.exports = (config) => {
                     [Dim 5] = NULL,
                     [Dim 6] = NULL,
                     [Dim 7] = NULL,
+<<<<<<< HEAD
                     [Comentarios] = NULL,
+=======
+                    Comentarios = NULL,
+>>>>>>> 82b6ea8 (ultimos cambios para deploy)
                     [Patron de Verificacion] = NULL,
                     [Calibrado] = NULL,
                     [Estatus] = NULL,
                     [Siguiente Calibracion] = NULL
                 WHERE
+<<<<<<< HEAD
                     [Calibrado] = 'OK'
                     AND [Ultima Calibracion] <= DATEADD(MONTH, -3, GETDATE());
             `);
@@ -51,6 +76,26 @@ module.exports = (config) => {
                 equiposFaltantes: result.recordset
             });
 
+=======
+                    [Calibrado] = 'OK' AND [Siguiente Calibracion] >= GETDATE();
+            `);
+
+            await pool.request().query(`
+                UPDATE F
+                SET
+                    F.[Ultima Calibracion] = H.Fecha,
+                    F.[Siguiente Calibracion] = DATEADD(DAY, 60, H.Fecha)
+                FROM
+                    Flexometros F
+                INNER JOIN (
+                    SELECT [ID Equipo], MAX(Fecha) AS Fecha
+                    FROM Historico
+                    GROUP BY [ID Equipo]
+                ) H ON F.ID = H.[ID Equipo];
+            `);
+
+            res.status(200).send('Datos procesados correctamente');
+>>>>>>> 82b6ea8 (ultimos cambios para deploy)
         } catch (err) {
             console.error('Error al procesar los datos:', err);
             res.status(500).send('Error al procesar los datos');
