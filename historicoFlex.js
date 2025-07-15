@@ -8,8 +8,6 @@ module.exports = (config) => {
         try {
             const pool = await sql.connect(config);
 
-<<<<<<< HEAD
-=======
             const result = await pool.request().query(`
                 SELECT COUNT(*) AS total 
                 FROM Flexometros 
@@ -22,7 +20,6 @@ module.exports = (config) => {
                 return res.status(200).send('No hay equipos calibrados válidos para procesar.');
             }
 
->>>>>>> 82b6ea8 (ultimos cambios para deploy)
             await pool.request().query(`
                 INSERT INTO Historico (
                     [ID Equipo], [Fecha], [DIM 1], [DIM 2], [DIM 3], [DIM 4], [DIM 5], [DIM 6], [DIM 7], [Comentarios], [Patron]
@@ -32,16 +29,8 @@ module.exports = (config) => {
                 FROM
                     Flexometros
                 WHERE
-<<<<<<< HEAD
-                    [Calibrado] = 'OK'
-                    AND [Ultima Calibracion] <= DATEADD(MONTH, -3, GETDATE());
-            `);
-
-            await pool.request().query(`
-=======
                     [Calibrado] = 'OK' AND [Siguiente Calibracion] >= GETDATE();
                 
->>>>>>> 82b6ea8 (ultimos cambios para deploy)
                 UPDATE Flexometros
                 SET
                     [Ultima Calibracion] = NULL,
@@ -52,31 +41,12 @@ module.exports = (config) => {
                     [Dim 5] = NULL,
                     [Dim 6] = NULL,
                     [Dim 7] = NULL,
-<<<<<<< HEAD
-                    [Comentarios] = NULL,
-=======
                     Comentarios = NULL,
->>>>>>> 82b6ea8 (ultimos cambios para deploy)
                     [Patron de Verificacion] = NULL,
                     [Calibrado] = NULL,
                     [Estatus] = NULL,
                     [Siguiente Calibracion] = NULL
                 WHERE
-<<<<<<< HEAD
-                    [Calibrado] = 'OK'
-                    AND [Ultima Calibracion] <= DATEADD(MONTH, -3, GETDATE());
-            `);
-
-            const result = await pool.request().query(`
-                SELECT [ID] FROM Flexometros WHERE [Calibrado] IS NULL
-            `);
-
-            res.status(200).json({
-                mensaje: 'Datos procesados correctamente',
-                equiposFaltantes: result.recordset
-            });
-
-=======
                     [Calibrado] = 'OK' AND [Siguiente Calibracion] >= GETDATE();
             `);
 
@@ -95,7 +65,6 @@ module.exports = (config) => {
             `);
 
             res.status(200).send('Datos procesados correctamente');
->>>>>>> 82b6ea8 (ultimos cambios para deploy)
         } catch (err) {
             console.error('Error al procesar los datos:', err);
             res.status(500).send('Error al procesar los datos');
